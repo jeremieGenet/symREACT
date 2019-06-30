@@ -25,3 +25,7 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # UTILISATION DE NOTRE PROPRE SERIALIZER POUR LES DATES (permet l'affichage d'erreurs personalisé par le système de validation symfony)
+    App\Serializer\PatchedDateTimeNormalizer:
+        tags: [serializer.normalizer]

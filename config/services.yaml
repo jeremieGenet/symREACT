@@ -29,3 +29,13 @@ services:
     # UTILISATION DE NOTRE PROPRE SERIALIZER POUR LES DATES (permet l'affichage d'erreurs personalisé par le système de validation symfony)
     App\Serializer\PatchedDateTimeNormalizer:
         tags: [serializer.normalizer]
+
+    # UTILISATION DE NOTRE PROPRE Classe (Events/JwtCreatedSubscriber.php) pour configurer les données des token de JWT (bundle de création de Token)
+    # ATTENTION, L'INDENTATION "correct" DE tags est vital sous faute d'erreur symfony
+    App\Events\JwtCreatedSubscriber:
+        tags:
+            - {
+                name: kernel.event_listener, 
+                event: lexik_jwt_authentication.on_jwt_created, 
+                method: updateJwtData
+              }

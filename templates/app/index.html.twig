@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon application REACT{% endblock %}
+
+{% block stylesheets %}
+    {# THEME SOLAR DE BOOTSWATCH (click droit sur bootstrap.min.css du thème) #}
+    <link rel="stylesheet" href="https://bootswatch.com/4/solar/bootstrap.min.css">
+    {# Permet de lié les balise link (css) (grâce au fichier build/entrypoints.json#}
+    {{ encore_entry_link_tags('app')}}
+{% endblock %}
+
+{% block body %}
+    <div id="app"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {# Permet de lié les balise script (js) (grâce au fichier build/entrypoints.json#}
+    {{ encore_entry_script_tags('app')}}
+{% endblock %}

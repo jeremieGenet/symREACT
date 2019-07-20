@@ -109,7 +109,7 @@ const InvoicesPage = (props) => {
 
     return ( 
         <>
-            <h1 className="mb-5">Liste des factures</h1>
+            <h1 className="mb-2">Liste des factures</h1>
 
             {/* RECHERCHE */}
             <div className="form-group">

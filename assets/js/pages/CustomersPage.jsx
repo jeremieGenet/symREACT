@@ -89,7 +89,7 @@ const CustomersPage = (props) => {
     );
     // Calcul de la page de pagination en fonction du départ (du décallage ou offset)
     const paginatedCustomers = Pagination.getData(
-        filteredCustomers, // Pagination sur le tableau des customers (mais filtré avec "filteredCustomers")
+        filteredCustomers, // Pagination sur le tableau des customers (mais filtré avec "filteredCustomers"
         currentPage, 
         itemsPerPage
     );
@@ -98,7 +98,7 @@ const CustomersPage = (props) => {
     return ( 
         <>
 
-        <h1 className="mb-5">Liste des clients</h1> 
+        <h1 className="mb-2">Liste des clients</h1> 
 
         {/* RECHERCHE */}
         <div className="form-group">

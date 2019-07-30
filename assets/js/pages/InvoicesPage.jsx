@@ -1,5 +1,6 @@
 import moment from "moment"; // librairie "moment" qui gère le formatage des dates
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Pagination from "../components/Pagination";
 import InvoicesAPI from "../services/InvoicesAPI";
 
@@ -8,7 +9,6 @@ const InvoicesPage = (props) => {
 
     // Nombre de invoices par page
     const itemsPerPage = 12;
-
     // tableau d'état de l'ensembre des invoices
     const [invoices, setInvoices] = useState([]);
     // tableaux d'état pour la pagination
@@ -109,9 +109,14 @@ const InvoicesPage = (props) => {
 
     return ( 
         <>
-            <h1 className="mb-2">Liste des factures</h1>
+            {/* Bouton CREATION D'UNE FACTURE */}
+            <div className="d-flex justify-content-between align-items-center mb-3">
+                <h1 className="mb-2">Liste des factures</h1>
+                {/* "Link" est un composant REACT-DOM-ROUTER qui à les attributs du rooting */}
+                <Link to="/invoices/new" className="btn btn-primary">Créer une facture</Link>
+            </div>
 
-            {/* RECHERCHE */}
+            {/* BARRE DE RECHERCHE */}
             <div className="form-group">
                 <input type="text" onChange={handleSearch} value={search} className="form-control" placeholder="Rechercher..." />
             </div>
@@ -148,7 +153,8 @@ const InvoicesPage = (props) => {
                             {invoice.amount.toLocaleString()} €
                         </td>
                         <td>
-                            <button className="btn btn-sm btn-dark mr-2">Editer</button>
+                            {/* Lien vers la facture à éditer via son id */}
+                            <Link to={"/invoices/" + invoice.id} className="btn btn-sm btn-dark mr-2">Editer</Link>
                             <button 
                             className="btn btn-sm btn-danger mr-2"
                             onClick={() => handleDelete(invoice.id)}

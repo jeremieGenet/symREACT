@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Pagination from "../components/Pagination";
 import CustomersAPI from "../services/CustomersAPI";
+import { Link } from "react-router-dom";
 
 
 const CustomersPage = (props) => {
@@ -97,77 +98,80 @@ const CustomersPage = (props) => {
 
     return ( 
         <>
+            {/* Bouton CREATION D'UN CLIENT */}
+            <div className="d-flex justify-content-between align-items-center mb-3">
+                <h1 className="mb-2">Liste des clients</h1>
+                {/* "Link" est un composant REACT-DOM-ROUTER qui à les attributs du rooting */}
+                <Link to="/customers/new" className="btn btn-primary">Créer un client</Link>
+            </div>
 
-        <h1 className="mb-2">Liste des clients</h1> 
+            {/* BARRE DE RECHERCHE */}
+            <div className="form-group">
+                <input type="text" onChange={handleSearch} value={search} className="form-control" placeholder="Rechercher..." />
+            </div>
 
-        {/* RECHERCHE */}
-        <div className="form-group">
-            <input type="text" onChange={handleSearch} value={search} className="form-control" placeholder="Rechercher..." />
-        </div>
-
-        <table className="table table-hover">
-            <thead>
-                <tr>
-                    <th>Id.</th>
-                    <th>Client</th>
-                    <th>Email</th>
-                    <th>Entreprise</th>
-                    <th className="text-center">Factures</th>
-                    <th className="text-center">Montant total</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {/* BOUCLE DU TR DES CUSTOMERS (l'ensemble des clients) */}
-                {paginatedCustomers.map(customer => (
-                    <tr key={customer.id}>{/* Ajout d'une clé unique (l'id de chaque client) pour l'optimisation de REACT */}
-                        <td>
-                            {customer.id}
-                        </td>
-                        <td>
-                            <a href="#">{customer.firstName} {customer.lastName}</a>
-                        </td>
-                        <td>
-                            {customer.email}
-                        </td>
-                        <td>
-                            {customer.company}
-                        </td>
-                        <td className="text-center">
-                            <span className="badge badge-light">{customer.invoices.length}</span>
-                        </td>
-                        {/* toLocaleString() est une fonction javascript renvoie une chaine de caractère au format des conventions locales */}
-                        <td className="text-center">{customer.totalAmount.toLocaleString()} €</td>
-                        <td>
-                            {/* Lors du clique on supprime le client (seulement s'il n'a pas de facture) */}
-                            {/* le bouton sera désactivé si le nb de facture du client est sup à 0 */}
-                            <button 
-                            onClick={() => handleDelete(customer.id)}
-                            disabled={customer.invoices.length > 0} 
-                            className="btn btn-sm btn-danger">
-                                Supprimer
-                            </button>
-                        </td>
+            <table className="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id.</th>
+                        <th>Client</th>
+                        <th>Email</th>
+                        <th>Entreprise</th>
+                        <th className="text-center">Factures</th>
+                        <th className="text-center">Montant total</th>
+                        <th></th>
                     </tr>
-                ))}
-                {/* FIN DE BOUCLE DU TR (des customers) */}
-                
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {/* BOUCLE DU TR DES CUSTOMERS (l'ensemble des clients) */}
+                    {paginatedCustomers.map(customer => (
+                        <tr key={customer.id}>{/* Ajout d'une clé unique (l'id de chaque client) pour l'optimisation de REACT */}
+                            <td>
+                                {customer.id}
+                            </td>
+                            <td>
+                                <a href="#">{customer.firstName} {customer.lastName}</a>
+                            </td>
+                            <td>
+                                {customer.email}
+                            </td>
+                            <td>
+                                {customer.company}
+                            </td>
+                            <td className="text-center">
+                                <span className="badge badge-light">{customer.invoices.length}</span>
+                            </td>
+                            {/* toLocaleString() est une fonction javascript renvoie une chaine de caractère au format des conventions locales */}
+                            <td className="text-center">{customer.totalAmount.toLocaleString()} €</td>
+                            <td>
+                                {/* Lors du clique on supprime le client (seulement s'il n'a pas de facture) */}
+                                {/* le bouton sera désactivé si le nb de facture du client est sup à 0 */}
+                                <button 
+                                onClick={() => handleDelete(customer.id)}
+                                disabled={customer.invoices.length > 0} 
+                                className="btn btn-sm btn-danger">
+                                    Supprimer
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                    {/* FIN DE BOUCLE DU TR (des customers) */}
+                    
+                </tbody>
+            </table>
 
-        {/* PAGINATION */}
+            {/* PAGINATION */}
 
-        {/* Condition si le nombre d'élément par page est inférieur au nombre du clients filtrés alors on affiche le composant Pagination */}
-        {itemsPerPage < filteredCustomers.length && (
-        <Pagination 
-            currentPage={currentPage} 
-            itemsPerPage={itemsPerPage} 
-            itemsLength={filteredCustomers.length} 
-            onPageChanged={handlePageChange} 
-        />
-        )}
+            {/* Condition si le nombre d'élément par page est inférieur au nombre du clients filtrés alors on affiche le composant Pagination */}
+            {itemsPerPage < filteredCustomers.length && (
+            <Pagination 
+                currentPage={currentPage} 
+                itemsPerPage={itemsPerPage} 
+                itemsLength={filteredCustomers.length} 
+                onPageChanged={handlePageChange} 
+            />
+            )}
 
-        
         </>
     );
 }

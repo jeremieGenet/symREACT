@@ -10,8 +10,11 @@ import InvoicesPage from './pages/InvoicesPage';
 import LoginPage from './pages/LoginPage';
 import AuthAPI from './services/AuthAPI';
 import PrivateRoute from './components/PrivateRoute';
+import FormCustomerPage from './pages/FormCustomerPage';
 
 import AuthContext from './contexts/AuthContext'; // Contexte d'authentification pour notre application
+import FormInvoicePage from './pages/FormInvoicePage';
+import RegisterPage from './pages/RegisterPage';
 
 
 // On apporte le css personnalisé
@@ -42,13 +45,19 @@ const App = () => {
 
                 <main className="container pt-5">
                     <Switch>
-                        {/* Chemin vers la page de connexion */}
+                        {/* Chemin vers le formulaire de connexion */}
                         <Route path="/login" component={LoginPage} />
+                        {/* Chemin vers le formulaire d'enregistrement' */}
+                        <Route path="/register" component={RegisterPage} />
                         {/* Chemin vers la d'essai */}
                         <Route path="/essai" component={Essai} />
-                        {/* Chemin vers la page des factures (si l'utilisateur est authentifié, sinon redirection vers la page de connexion (composant fait main) */}
+                        {/* Chemin vers le formulaire de création d'une facture (si l'utilisateur est authentifié, sinon redirection vers la page de connexion (composant fait main) */}
+                        <PrivateRoute path="/invoices/:id" component={FormInvoicePage} />
+                        {/* Chemin vers la liste des factures (si l'utilisateur est authentifié, sinon redirection vers la page de connexion (composant fait main) */}
                         <PrivateRoute path="/invoices" component={InvoicesPage} />
-                        {/* Chemin vers la page des clients (si l'utilisateur est authentifié, sinon redirection vers la page de connexion (composant fait main) */}
+                        {/* Chemin vers le formulaire de création d'un client (si l'utilisateur est authentifié, sinon redirection vers la page de connexion (composant fait main) */}
+                        <PrivateRoute path="/customers/:id" component={FormCustomerPage} />
+                        {/* Chemin vers la liste des clients (si l'utilisateur est authentifié, sinon redirection vers la page de connexion (composant fait main) */}
                         <PrivateRoute path="/customers" component={CustomersPage} />
                         {/* Chemin vers la page d'accueil */}
                         <Route path="/" component={HomePage} />

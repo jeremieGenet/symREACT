@@ -1,6 +1,8 @@
 import React, {useState, useContext} from 'react';
 import AuthAPI from '../services/AuthAPI';
 import AuthContext from '../contexts/AuthContext';
+import Field from '../components/forms/Field';
+import Field_Autofocus from '../components/forms/Field_Autofocus';
 
 // la props "history" permet de faire des redirection (rooting)
 const LoginPage = ({ history }) => {
@@ -50,28 +52,30 @@ const LoginPage = ({ history }) => {
             <h1>Page de connexion</h1>
 
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="username">Adresse email</label>
-                    <input 
-                        value={credentials.username}
-                        onChange={handleChange}
-                        type="email" 
-                        placeholder="Adresse email de connexion" 
-                        name="username" 
-                        id="username"
-                        /* 
-                            La classe "is-invalid" est une classe Bootstrap qui si elle est présente permet l'affichage de le classe "invalid-feedback",
-                            ici elle est ajoutée si il y a une erreur et permet l'affichage du paragraphe suivant
-                        */
-                        className={"form-control" + (error && " is-invalid")}
-                    />
-                    {/* ERREUR FORMULAIRE */}
-                    {/* CONDITION: si il y a une "error" alors on affiche le paragraphe classe = invalid-feedback et le contenu de l'erreur */}
-                    {error && 
-                    <p className="invalid-feedback">
-                        {error}
-                    </p>}
-                </div>
+
+                {/* Champ "username" du formulaire (fait à partir du composant maison "Field") */}
+                <Field_Autofocus
+                    name="username" 
+                    label="Adresse email" 
+                    value={credentials.username} 
+                    onChange={handleChange} 
+                    type="email" 
+                    placeholder="Adresse email de connexion"
+                    error={error}
+                    autoFocus="true"
+                />
+
+                {/* Champ "password" du formulaire (fait à partir du composant maison "Field") */}
+                <Field 
+                    name="password"
+                    label="Mot de passe"
+                    value={credentials.password}
+                    onChange={handleChange}
+                    type="password"
+                    placeholder="Votre mot de passe"
+                    error={error}
+                />
+                {/* 
                 <div className="form-group">
                     <label htmlFor="password">Mot de passe</label>
                     <input 
@@ -85,7 +89,9 @@ const LoginPage = ({ history }) => {
                         className="form-control"
                     />
                 </div>
+                */}
 
+                {/* Bouton de soumission du formulaire */}
                 <div className="form-group">
                     <button type="submit" className="btn btn-success">Je me connecte !</button>
                 </div>

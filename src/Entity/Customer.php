@@ -20,9 +20,18 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
  * @ApiResource(
  *  collectionOperations={"GET", "POST"},
- *  itemOperations={"GET", "PUT", "DELETE"},
  *  subresourceOperations={
  *      "invoices_get_subresource"={"path"="/client/{id}/factures"}
+ *  },
+ *  itemOperations={"GET", "PUT", "DELETE", "numberCustomersPerUser"={
+ *      "method"="GET", 
+ *      "path"="/customers/{id}/count", 
+ *      "controller"="App\Controller\NumberCustomersPerUser",
+ *      "swagger_context"={
+ *          "summary"="Nombre de clients par utilisateur //////////// FONCTIONNE PAS ////////////////",
+ *          "description"="Calcul le nombre de clients par utilisateur"
+ *      }
+ *    }
  *  },
  *  normalizationContext={
  *      "groups"={"customers_read"}
@@ -37,13 +46,13 @@ class Customer
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"customers_read", "invoices_read"})
+     * @Groups({"customers_read", "invoices_read", "users_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"customers_read", "invoices_read"})
+     * @Groups({"customers_read", "invoices_read", "users_read"})
      * @Assert\NotBlank(message="Le prénom du client est obligatoire")
      * @Assert\Length(min=3, minMessage="Le prénom doit être compris entre 3 et 255 caractères", max=255, minMessage="Le prénom doit faire entre 3 et 255 caractères")
      */
@@ -51,7 +60,7 @@ class Customer
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"customers_read", "invoices_read"})
+     * @Groups({"customers_read", "invoices_read", "users_read"})
      * @Assert\NotBlank(message="Le prénom du client est obligatoire")
      * @Assert\Length(min=3, minMessage="Le nom doit être compris entre 3 et 255 caractères", max=255, minMessage="Le nom doit faire entre 3 et 255 caractères")
      */
@@ -59,7 +68,7 @@ class Customer
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"customers_read", "invoices_read"})
+     * @Groups({"customers_read", "invoices_read", "users_read"})
      * @Assert\NotBlank(message="L'email du client est obligatoire")
      * @Assert\Email(message="le format de l'adresse email doit être valide")
      */
@@ -67,7 +76,7 @@ class Customer
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"customers_read", "invoices_read"})
+     * @Groups({"customers_read", "invoices_read", "users_read"})
      */
     private $company;
 
@@ -92,14 +101,14 @@ class Customer
 
     /**
      * FAIT MAISON
-     * Retourne le calcul du montant total de la collection de facture du client
+     * Retourne le calcul du montant total de la collection de factures du client
      * @Groups({"customers_read"})
      *
      * @return float
      */
     public function getTotalAmount(): float
     {
-        // boucle avec 'array_reduce' sur la collection d' "invoices" tranformée en tableau (toArray())
+        // Boucle avec 'array_reduce' sur la collection d' "invoices" tranformée en tableau (toArray())
         // $total est initialisé à 0 en fin de fonction, et $invoice sera incrémenté du montant de la facture à chaque tour de boucle
         return array_reduce($this->invoices->toArray(), function($total, $invoice){
             return $total + $invoice->getAmount();
@@ -219,4 +228,5 @@ class Customer
 
         return $this;
     }
+
 }

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import Field from '../components/forms/Field';
+import Field from '../../components/forms/Field';
 import { Link } from "react-router-dom";
-import Field_Autofocus from '../components/forms/Field_Autofocus';
-import usersAPI from '../services/usersAPI';
+import Field_Autofocus from '../../components/forms/Field_Autofocus';
+import UsersAPI from '../../services/UsersAPI';
+import { toast } from 'react-toastify';
 
 
 const RegisterPage = ({history}) => {
@@ -39,14 +40,15 @@ const RegisterPage = ({history}) => {
         if(user.password !== user.passwordConfirm){
             apiErrors.passwordConfirm = "Votre confirmation de mot de passe est différente du mot de passe original";
             setErrors(apiErrors);
+            toast.error("Des erreurs dans votre formulaires !"); // Utilisation de la libraire "Toastify" pour l'affichage d'une notification à l'utilisateur
             return; // On stop le script ici (avec le return)
         }
 
         try{
             // On enregistre notre nouvel utilisateur
-            await usersAPI.register(user);
+            await UsersAPI.register(user);
             setErrors({}); // On vide notre objet des erreurs
-            // TODO: Flash success
+            toast.success("Vous êtes désormais inscrit, vous pouvez vous connecter !"); // Utilisation de la libraire "Toastify" pour l'affichage d'une notification à l'utilisateur
             history.replace('/login'); // Redirection vers la page de connexion
             
         }catch(error){
@@ -62,10 +64,10 @@ const RegisterPage = ({history}) => {
                 setErrors(apiErrors); // On met nos erreur dans le setErrors
             };
 
-            // TODO: flash erreur
+            toast.error("Des erreurs dans votre formulaires !"); // Utilisation de la libraire "Toastify" pour l'affichage d'une notification à l'utilisateur
         }
 
-        console.log(user); // Affiche un objet qui contient les infos envoyées dans le formulaire sur le user
+        //console.log(user); // Affiche un objet qui contient les infos envoyées dans le formulaire sur le user
     }
 
     return ( 

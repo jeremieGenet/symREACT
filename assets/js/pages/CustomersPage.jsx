@@ -2,25 +2,31 @@ import React, { useEffect, useState } from "react";
 import Pagination from "../components/Pagination";
 import CustomersAPI from "../services/CustomersAPI";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import TableLoader from "../components/loaders/TableLoader";
 
 
 const CustomersPage = (props) => {
 
     // Nombre de customer par page
-    const itemsPerPage = 12;
+    const itemsPerPage = 10;
     // tableaux d'état de l'ensemble des clients
     const [customers, setCustomers] = useState([]);
     // tableaux d'état pour la pagination
     const [currentPage, setCurrentPage] = useState(1); // Par défaut currentPage sera 1 (la page n°1)
     // tableau d'état de la barre de recherche
     const [search, setSearch] = useState("");
+    // tableau d'état qui sert au système de loader (libraire "React-content-loader")
+    const [loading, setLoading] = useState(true); // notre loading est à "true" au départ (par défaut)
 
     // Permet de récup les customers
     const fetchCustomers = async () => {
         try{
             const data = await CustomersAPI.findAll()
             setCustomers(data);
+            setLoading(false); // Quand on a fini de récup les customers on met notre système de loading à "false"
         }catch(error){
+            toast.error("Impossible de charger les clients !"); // Utilisation de la libraire "Toastify" pour l'affichage d'une notification à l'utilisateur
             console.log(error.response)
         }
     }
@@ -52,9 +58,11 @@ const CustomersPage = (props) => {
 
         try{
             await CustomersAPI.delete(id)
+            toast.success("Le client à bien été supprimé");
         }catch(error){
             // Si il y a une erreur de réponse serveur, alors on réinitialise le tableau des customers (notre tableau copier en début de fonction)
             setCustomers(originalCustomers);
+            toast.error("La suppression du client n'a pas pu fonctionner !");
             console.log("erreur dans l'intitulé de la requête!!!!");
         }
         /* // Requ
@@ -122,7 +130,10 @@ const CustomersPage = (props) => {
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
+
+                {/* Condition : Si loading vaut false (!loading) alors on affiche le contenu de "tbody" */}
+                {!loading && (
+                    <tbody>
                     {/* BOUCLE DU TR DES CUSTOMERS (l'ensemble des clients) */}
                     {paginatedCustomers.map(customer => (
                         <tr key={customer.id}>{/* Ajout d'une clé unique (l'id de chaque client) pour l'optimisation de REACT */}
@@ -130,7 +141,10 @@ const CustomersPage = (props) => {
                                 {customer.id}
                             </td>
                             <td>
-                                <a href="#">{customer.firstName} {customer.lastName}</a>
+                                {/* Lien vers la page du client */}
+                                <Link to={"/customers/" + customer.id}>
+                                    {customer.firstName} {customer.lastName}
+                                </Link>
                             </td>
                             <td>
                                 {customer.email}
@@ -156,9 +170,12 @@ const CustomersPage = (props) => {
                         </tr>
                     ))}
                     {/* FIN DE BOUCLE DU TR (des customers) */}
-                    
-                </tbody>
+                    </tbody>
+                )}
             </table>
+
+            {/* Si "loading" vaut "true" on affiche notre Composant de loading */}
+            {loading && <TableLoader />}
 
             {/* PAGINATION */}
 

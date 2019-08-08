@@ -7,10 +7,10 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Security\Core\User\UserInterface;
 
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -69,13 +69,32 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer", mappedBy="user")
-     * 
+     * @Groups({"users_read"})
      */
     private $customers;
 
     public function __construct()
     {
         $this->customers = new ArrayCollection();
+    }
+
+    /**
+     * FAIT MAISON
+     * Retourne le calcul du nombre de clients appartenant à l'utilisateur
+     * @Groups({"users_read"})
+     *
+     * @return int
+     */
+    public function getTotalCustomers(): int
+    {
+        /*
+        // boucle avec 'array_reduce' sur la collection d' "invoices" tranformée en tableau (toArray())
+        // $total est initialisé à 0 en fin de fonction, et $invoice sera incrémenté du montant de la facture à chaque tour de boucle
+        return array_reduce($this->invoices->toArray(), function($total, $invoice){
+            return $total + $invoice->getAmount();
+        }, 0);
+        */
+        return count($this->customers->toArray());
     }
 
     public function getId(): ?int

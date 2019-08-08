@@ -18,6 +18,7 @@ class CustomerUserSubscriber implements EventSubscriberInterface
 {
     private $security;
 
+    // A la contruction de la classe on récup en injection de dépendance de la classe "Security" de symfony (permet entre autre de récup l'utilisateur actuellement connecté)
     public function __construct(Security $security)
     {
         $this->security = $security;
@@ -33,7 +34,7 @@ class CustomerUserSubscriber implements EventSubscriberInterface
 
     public function setUserForCustomer(GetResponseForControllerResultEvent $event){
         $customer = $event->getControllerResult();
-        $method = $event->getRequest()->getMethod(); // On réqup la méthode de requête (POST, GET...)
+        $method = $event->getRequest()->getMethod(); // On récup la méthode de requête (POST, GET...)
         
 
         if($customer instanceof Customer && $method === "POST"){

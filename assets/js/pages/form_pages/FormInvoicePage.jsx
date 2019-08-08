@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
-import Field from '../components/forms/Field';
-import Select from '../components/forms/Select';
-import CustomersAPI from "../services/CustomersAPI";
-import InvoicesAPI from '../services/InvoicesAPI';
+import Field from '../../components/forms/Field';
+import Select from '../../components/forms/Select';
+import CustomersAPI from "../../services/CustomersAPI";
+import InvoicesAPI from '../../services/InvoicesAPI';
+import { toast } from 'react-toastify';
+import FormContentLoader from "../../components/loaders/FormContentLoader";
 
 // la props "history" fait parti de tout composant REACT et permet de faire des redirection (rooting)
 const FormInvoicePage = ({history, match}) => {
@@ -28,18 +30,21 @@ const FormInvoicePage = ({history, match}) => {
         customer: "",
         status: ""
     });
+    // tableau d'état qui sert au système de loader (libraire "React-content-loader")
+    const [loading, setLoading] = useState(true); // notre loading est à "true" au départ (par défaut)
 
     // Récup l'ensemble des clients
     const fetchCustomers = async () => {
         try{
             const data = await CustomersAPI.findAll();
             setCustomers(data); // data représent un tableau avec l'ensemble des clients
+            setLoading(false); // Quand on a fini de récup les customers on met notre système de loading à "false"
             // Si le client de la facture est vide (non défini dans le formulaire) alors on donne à "setInvoice" le premier customer chargé
             // on met une copie de invoice (...invoice) et on change par le premier client du tableau data (comme cela on aura le premier client par défaut)
             if(!invoice.customer) setInvoice({...invoice, customer: data[0].id});
         }catch(error){
             console.log(error.response);
-            // TODO : flash notification erreur
+            toast.error("Impossible de charger les clients !"); // Utilisation de la libraire "Toastify" pour l'affichage d'une notification à l'utilisateur
 
             history.replace("/invoices") // Redirection vers la liste des invoices
         }
@@ -50,11 +55,12 @@ const FormInvoicePage = ({history, match}) => {
         try{
             // On récup les propriétés "amount status et customer" de requête qui récup un facture via son id
             const { amount, status, customer } = await InvoicesAPI.find(id);
-        // On met à jour le "setInvoice" en modifiant le customer par le customer id (parce que customer est un objet, alors que l'on ne veut que son id)    
-        setInvoice({ amount, status, customer: customer.id}); 
+            // On met à jour le "setInvoice" en modifiant le customer par le customer id (parce que customer est un objet, alors que l'on ne veut que son id)    
+            setInvoice({ amount, status, customer: customer.id}); 
+            setLoading(false); // Quand on a fini de récup la facture on met notre système de loading à "false"
         }catch(error){
             console.log(error.response);
-            // TODO : flash notification erreur
+            toast.error("Impossible de charger la facture demandée !"); // Utilisation de la libraire "Toastify" pour l'affichage d'une notification à l'utilisateur
 
             history.replace("/invoices") // Redirection vers la liste des invoices
         }
@@ -89,11 +95,11 @@ const FormInvoicePage = ({history, match}) => {
             if(editing){
                 // On modifie une invoice via son id
                 await InvoicesAPI.edit(id, invoice);
-                // TODO : Flash notif success
+                toast.success("La facture à bien été modifiée !"); // Utilisation de la libraire "Toastify" pour l'affichage d'une notification à l'utilisateur
             }else{
                 // On post la facture via son id (mais l'id de l'api sous forme "api/customer/" + invoice.customer)
                 await InvoicesAPI.create(invoice);
-                // TODO : Flash de notif success
+                toast.success("La facture à bien été créée !"); // Utilisation de la libraire "Toastify" pour l'affichage d'une notification à l'utilisateur
     
                 history.replace("/invoices"); // Redirection vers la liste des factures
             }
@@ -108,63 +114,70 @@ const FormInvoicePage = ({history, match}) => {
                 });
 
                 setErrors(apiErrors); // On rempli notre Etat des erreurs par le tableau des erreurs (ce qui permet un affichage des erreurs dans le formulaire)
-
-                // TODO : Flash notification d'erreurs
+                toast.error("Des erreurs dans votre formulaires !"); // Utilisation de la libraire "Toastify" pour l'affichage d'une notification à l'utilisateur
             }
         }
     } 
 
     return ( 
         <>
+
             {/* Condition Si on est en mode édition alors le h1 change */}
             {editing && <h1>Modification d'une facture</h1> || <h1>Création d'une facture</h1>}
 
-            <form onSubmit={handleSubmit} >
-                <Field 
-                    name="amount"
-                    type="number"
-                    label="Montant" 
-                    placeholder="Montant de la facture" 
-                    value={invoice.amount} 
-                    onChange={handleChange} 
-                    error={errors.amount}
-                />
+            {/* Composant de loading pour formulaire, CONDITION : si loading vaut true alors on affiche le composant */}
+            {loading && <FormContentLoader />}
 
-                <Select
-                    name="customer"
-                    label="Clients"
-                    value={invoice.customer}
-                    error={errors.customer}
-                    onChange={handleChange}
-                >
-                    {/* BOUCLE sur les customers */}
-                    {customers.map(customer => (
-                        <option key={customer.id} value={customer.id}>
-                            {customer.firstName} {customer.lastName}
-                        </option>
-                    ))}
-                    <option value="1">Jérémie Genet</option>
-                    <option value="1">Sabrina Michaud</option>
-                </Select>
+            {/* Si loading vaut false alors on affiche le formulaire */}
+            {!loading && (
+                <form onSubmit={handleSubmit}>
+                    <Field 
+                        name="amount"
+                        type="number"
+                        label="Montant" 
+                        placeholder="Montant de la facture" 
+                        value={invoice.amount} 
+                        onChange={handleChange} 
+                        error={errors.amount}
+                    />
 
-                <Select
-                    name="status"
-                    label="Statut"
-                    value={invoice.status}
-                    error={errors.status}
-                    onChange={handleChange}
-                >
-                    <option value="SENT">Envoyée</option>
-                    <option value="PAID">Payée</option>
-                    <option value="CANCELLED">Annulée</option>
-                </Select>
-                
+                    <Select
+                        name="customer"
+                        label="Clients"
+                        value={invoice.customer}
+                        error={errors.customer}
+                        onChange={handleChange}
+                    >
+                        {/* BOUCLE sur les customers */}
+                        {customers.map(customer => (
+                            <option key={customer.id} value={customer.id}>
+                                {customer.firstName} {customer.lastName}
+                            </option>
+                        ))}
+                        <option value="1">Jérémie Genet</option>
+                        <option value="1">Sabrina Michaud</option>
+                    </Select>
 
-                <div className="form-group mt-4">
-                    <button type="submit" className="btn btn-success">Enregister</button>
-                    <Link to="/invoices" className="btn btn-link">Retour à la liste </Link>
-                </div>
-            </form>
+                    <Select
+                        name="status"
+                        label="Statut"
+                        value={invoice.status}
+                        error={errors.status}
+                        onChange={handleChange}
+                    >
+                        <option value="SENT">Envoyée</option>
+                        <option value="PAID">Payée</option>
+                        <option value="CANCELLED">Annulée</option>
+                    </Select>
+                    
+
+                    <div className="form-group mt-4">
+                        <button type="submit" className="btn btn-success">Enregister</button>
+                        <Link to="/invoices" className="btn btn-link">Retour à la liste </Link>
+                    </div>
+                </form>
+            )}
+
         </>
      );
 }

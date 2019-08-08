@@ -1,7 +1,6 @@
 /*
     GESTION DES REQUETES CONCERNANT LES CUSTOMERS
 */
-
 import axios from "axios";
 
 // Trouver toutes les factures

@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import AuthAPI from "../services/AuthAPI";
 
 import AuthContext from "../contexts/AuthContext"; // On récup le context (d'authentification)
+import { toast } from 'react-toastify';
 
 
 // sfc
@@ -15,6 +16,7 @@ const Navbar = ({ history }) => {
     const handleLogout = () => {
         AuthAPI.logout();
         setIsAuthenticated(false);
+        toast.info("Vous êtes désormais déconnecté ! 😉"); // Utilisation de la librairie "Toastify" pour afficher une notification à l'utilisateur
         history.push('/login'); // Redirection vers la page du connexion 
     };
 
@@ -34,6 +36,9 @@ const Navbar = ({ history }) => {
                     </li>
                     <li className="nav-item">
                         <NavLink className="nav-link" to="/invoices">Factures</NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/users">Utilisateurs</NavLink>
                     </li>
                     <li className="nav-item">
                         <NavLink className="nav-link" to="/essai">ESSAI</NavLink>

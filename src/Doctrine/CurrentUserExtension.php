@@ -27,7 +27,7 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryIt
     }
 
     /**
-     * Permet de paramètrer ou la requête DQL (doctrine) sera faite, ici on param pour récup les invoices et les customers en fonction de l'utilisateur
+     * Permet de paramètrer ou la requête DQL (doctrine) sera faite, ici on param pour récup les invoices et les customers en fonction de l'utilisateur qui est connecté
      *
      * @param QueryBuilder $queryBuilder
      * @param string $resourceClass
@@ -78,7 +78,7 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryIt
     }
 
     /**
-     * Permet de récupérer une unique réponse DQL (doctrine), addWhere permet de récup les invoices et les customers en fonction de l'utilisateur
+     * Permet de récupérer une unique réponse DQL (doctrine), addWhere permet de récup une invoice et un customer en fonction de l'utilisateur
      *
      * @param QueryBuilder $queryBuilder
      * @param QueryNameGeneratorInterface $queryNameGenerator

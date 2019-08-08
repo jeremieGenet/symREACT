@@ -1,3 +1,7 @@
+/*
+    GESTION DES REQUETES CONCERNANT L'AUTHENTIFICATION
+*/
+
 import axios from "axios";
 import jwtDecode from "jwt-decode"; // Librairie qui permet de décoder un token jwt (de la librairie jwt)
 

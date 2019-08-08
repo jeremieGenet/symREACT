@@ -45,8 +45,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY } # cette url peut être utilisée sans authentification
-        - { path: ^/api/customers, roles: IS_AUTHENTICATED_FULLY }   # cette url peut être utilisée sans authentification
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY } # cette url peut être utilisée sans être authentifié (sans être connecté)
+        - { path: ^/api/customers, roles: IS_AUTHENTICATED_FULLY }   # cette url doit être authentifié
         - { path: ^/api/invoices, roles: IS_AUTHENTICATED_FULLY }    # cette url doit être authentifié
         - { path: ^/api/users, roles: IS_AUTHENTICATED_FULLY, methods: [GET, PUT, DELETE] } # cette url doit être authentifié (sauf pour les méthodes GET, PUT, et DELETE)
         # - { path: ^/admin, roles: ROLE_ADMIN }

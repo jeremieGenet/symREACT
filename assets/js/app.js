@@ -7,14 +7,17 @@ import Essai from './pages/Essai';
 import HomePage from './pages/HomePage';
 import CustomersPage from './pages/CustomersPage';
 import InvoicesPage from './pages/InvoicesPage';
-import LoginPage from './pages/LoginPage';
+import LoginPage from './pages/form_pages/LoginPage';
 import AuthAPI from './services/AuthAPI';
 import PrivateRoute from './components/PrivateRoute';
-import FormCustomerPage from './pages/FormCustomerPage';
+import FormCustomerPage from './pages/form_pages/FormCustomerPage';
 
 import AuthContext from './contexts/AuthContext'; // Contexte d'authentification pour notre application
-import FormInvoicePage from './pages/FormInvoicePage';
-import RegisterPage from './pages/RegisterPage';
+import FormInvoicePage from './pages/form_pages/FormInvoicePage';
+import RegisterPage from './pages/form_pages/RegisterPage';
+import UsersPage from './pages/UsersPage';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // On import le css de Tostify (pour les notifications)
 
 
 // On apporte le css personnalisé
@@ -49,6 +52,8 @@ const App = () => {
                         <Route path="/login" component={LoginPage} />
                         {/* Chemin vers le formulaire d'enregistrement' */}
                         <Route path="/register" component={RegisterPage} />
+                        {/* Chemin vers le formulaire de création d'une facture (si l'utilisateur est authentifié, sinon redirection vers la page de connexion (composant fait main) */}
+                        <PrivateRoute path="/users" component={UsersPage} />
                         {/* Chemin vers la d'essai */}
                         <Route path="/essai" component={Essai} />
                         {/* Chemin vers le formulaire de création d'une facture (si l'utilisateur est authentifié, sinon redirection vers la page de connexion (composant fait main) */}
@@ -65,6 +70,10 @@ const App = () => {
                 </main>
 
             </HashRouter>
+
+            {/* Composant qui permet l'utilisation des Notifications à l'utilisateur */}
+            <ToastContainer position={toast.POSITION.BOTTOM_CENTER} />
+
         </AuthContext.Provider>
     );
 };

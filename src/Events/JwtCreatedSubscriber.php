@@ -14,10 +14,10 @@ class JwtCreatedSubscriber
     {
         //dd($event);
 
-        // On récup l'utilisateur (pour avoir son firsName et lastName)
+        // On récup l'utilisateur (pour avoir son firstName et lastName)
         $user = $event->getUser();
 
-        // On enrichi les data pour qu'elles contiennnent le fistName et le lastName
+        // On enrichi les data pour qu'elles contiennnent le firstName et le lastName
         $data = $event->getData();
         $data['firstName'] = $user->getFirstName();
         $data['lastName'] = $user->getLastName();

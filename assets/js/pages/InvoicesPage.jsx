@@ -3,18 +3,22 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Pagination from "../components/Pagination";
 import InvoicesAPI from "../services/InvoicesAPI";
+import { toast } from "react-toastify";
+import TableLoader from "../components/loaders/TableLoader";
 
 
 const InvoicesPage = (props) => {
 
     // Nombre de invoices par page
-    const itemsPerPage = 12;
+    const itemsPerPage = 10;
     // tableau d'état de l'ensembre des invoices
     const [invoices, setInvoices] = useState([]);
     // tableaux d'état pour la pagination
     const [currentPage, setCurrentPage] = useState(1); // Par défaut currentPage sera 1 (la page n°1)
     // tableau d'état de la barre de recherche
     const [search, setSearch] = useState("");
+    // tableau d'état qui sert au système de loader (libraire "React-content-loader")
+    const [loading, setLoading] = useState(true); // notre loading est à "true" au départ (par défaut)
 
     // Objet qui gère la classe html du statut des factures (pour en modifier le coloris)
     const INVOICES_STATUS = {
@@ -36,9 +40,11 @@ const InvoicesPage = (props) => {
     const fetchInvoices = async () => {
         try{
             const data = await InvoicesAPI.findAll()
-        setInvoices(data);
+            setInvoices(data);3
+            setLoading(false); // Quand on a fini de récup les invoices on met notre système de loading à "false"
         }catch(error){
-            console.log(error.response);
+            //console.log(error.response);
+            toast.error("Erreur lors du chargement des factures ! 😈"); // Utilisation de la libraire "Toastify" pour l'affichage d'une notification à l'utilisateur
         }
     };
 
@@ -58,15 +64,14 @@ const InvoicesPage = (props) => {
         // Création d'une tableau similaire au tableau des invoices originales (dans le but de le récup si la requête serveur ne fonctionne pas)
         const originalInvoices = [...invoices];
         //console.log("tableau" + [.. invoices]); // Affiche un tableau qui contient les invoices
-
         // On filtre le tableau des invoices et on ne garde que les invoices dont l'id est différent de celui reçu en param (soit l'id du bouton cliqué)
         setInvoices(invoices.filter(invoice => invoice.id !== id));
-
         //console.log(id); // renvoi l'id du client
-
         try{
             await InvoicesAPI.delete(id)
+            //toast.success("La facture à bien été supprimée !"); // Utilisation de la libraire "Toastify" pour l'affichage d'une notification à l'utilisateur
         }catch(error){
+            toast.error("Une erreur est survenue !"); // Utilisation de la libraire "Toastify" pour l'affichage d'une notification à l'utilisateur
             // Si il y a une erreur de réponse serveur, alors on réinitialise le tableau des invoices (notre tableau copier en début de fonction)
             setInvoices(originalInvoices);
             console.log("erreur dans l'intitulé de la requête!!!!");
@@ -78,7 +83,7 @@ const InvoicesPage = (props) => {
         //console.log("page vaut = " + page); // Affiche le nb de la page active (lorsqu'on click sur la pagination)
         setCurrentPage(page);
     }
-    // Gestion de la recherche (du champ de recherche)
+    // Gestion de la recherche (champ de recherche)
     const handleSearch = ({ currentTarget }) => {
         setSearch(currentTarget.value);
         //console.log(value); // Affiche ce qui est inscrit dans le champ de recherche
@@ -126,49 +131,56 @@ const InvoicesPage = (props) => {
                     <tr>
                         <th>Numéro</th>
                         <th>Client</th>
-                        <th>Date d'envoi</th>
-                        <th className="text-center">Statut</th>
+                        <th className="text-center">Date d'envoi</th>
+                        <th>Statut</th>
                         <th className="text-center">Montant</th>
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
-                {paginatedInvoices.map(invoice => (
-                    <tr key={invoice.id}>{/* Ajout d'une clé unique (l'id de chaque client) pour l'optimisation de REACT */}
-                        <td>
-                            {invoice.id}
-                        </td>
-                        <td>
-                            <a href="#">{invoice.customer.firstName} {invoice.customer.lastName}</a>
-                        </td>
-                        <td className="text-center">
-                            {/* DATE (formatée avec notre fonction formatDate() construite à partir de la librairie "moment") */}
-                            {formatDate(invoice.sentAt)}
-                        </td>
-                        <td>
-                        {/* Statut de la facture (ici on modifie la classe en fonction du statut pour modifier le coloris) */}
-                        <span className={"badge badge-" + INVOICES_STATUS[invoice.status]}>{INVOICES_LABEL[invoice.status]}</span>
-                        </td>
-                        <td className="text-center">
-                            {invoice.amount.toLocaleString()} €
-                        </td>
-                        <td>
-                            {/* Lien vers la facture à éditer via son id */}
-                            <Link to={"/invoices/" + invoice.id} className="btn btn-sm btn-dark mr-2">Editer</Link>
-                            <button 
-                            className="btn btn-sm btn-danger mr-2"
-                            onClick={() => handleDelete(invoice.id)}
-                            >
-                                Supprimer
-                            </button>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
+
+                {/* Condition : Si loading vaut false (!loading) alors on affiche le contenu de "tbody" */}
+                {!loading && (
+                    <tbody>
+                    {paginatedInvoices.map(invoice => (
+                        <tr key={invoice.id}>{/* Ajout d'une clé unique (l'id de chaque client) pour l'optimisation de REACT */}
+                            <td>
+                                {invoice.id}
+                            </td>
+                            <td>
+                                {/* NOM ET PRENOM DU CLIENT (de la facture) avec lien vers le formulaire de  modification de cette facture */}
+                                <Link to={"/invoices/" + invoice.id} className="mr-2">{invoice.customer.firstName} {invoice.customer.lastName}</Link>
+                            </td>
+                            <td className="text-center">
+                                {/* DATE (formatée avec notre fonction formatDate() construite à partir de la librairie "moment") */}
+                                {formatDate(invoice.sentAt)}
+                            </td>
+                            <td>
+                            {/* Statut de la facture (ici on modifie la classe en fonction du statut pour modifier le coloris) */}
+                            <span className={"badge badge-" + INVOICES_STATUS[invoice.status]}>{INVOICES_LABEL[invoice.status]}</span>
+                            </td>
+                            <td className="text-center">
+                                {invoice.amount.toLocaleString()} €
+                            </td>
+                            <td>
+                                {/* Lien vers la facture à éditer via son id */}
+                                <Link to={"/invoices/" + invoice.id} className="btn btn-sm btn-dark mr-2">Editer</Link>
+                                <button 
+                                className="btn btn-sm btn-danger mr-2"
+                                onClick={() => handleDelete(invoice.id)}
+                                >
+                                    Supprimer
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                )}
             </table>
 
-            {/* PAGINATION */}
+            {/* Si "loading" vaut "true" on affiche notre Composant de loading */}
+            {loading && <TableLoader />}
 
+            {/* PAGINATION */}
             {/* Condition si le nombre d'élément par page est inférieur au nombre du factures filtrées alors on affiche le composant Pagination */}
             {itemsPerPage < filteredInvoices.length && (
                 <Pagination 
@@ -178,7 +190,6 @@ const InvoicesPage = (props) => {
                     onPageChanged={handlePageChange} 
                 />
             )}
-
 
         </>
     );

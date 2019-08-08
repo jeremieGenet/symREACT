@@ -19,6 +19,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "normalization_context"={"groups"={"invoices_subresource"}}
  *      }
  *  },
+ *  itemOperations={"GET", "PUT", "DELETE", "increment"={
+ *      "method"="post", 
+ *      "path"="/invoices/{id}/increment", 
+ *      "controller"="App\Controller\InvoiceIncrementationController",
+ *      "swagger_context"={
+ *          "summary"="Incrémente une facture ///////////////",
+ *          "description"="Incrémente le chrono d'une facture donnée"
+ *      }
+ *    }
+ *  },
  *  attributes={
  *      "pagination_enabled"=false,
  *      "pagination_items_per_page"=20,

@@ -1,8 +1,9 @@
 import React, {useState, useContext} from 'react';
-import AuthAPI from '../services/AuthAPI';
-import AuthContext from '../contexts/AuthContext';
-import Field from '../components/forms/Field';
-import Field_Autofocus from '../components/forms/Field_Autofocus';
+import AuthAPI from '../../services/AuthAPI';
+import AuthContext from '../../contexts/AuthContext';
+import Field from '../../components/forms/Field';
+import Field_Autofocus from '../../components/forms/Field_Autofocus';
+import { toast } from 'react-toastify';
 
 // la props "history" permet de faire des redirection (rooting)
 const LoginPage = ({ history }) => {
@@ -39,11 +40,13 @@ const LoginPage = ({ history }) => {
             console.log("connexion réussi !!!");
             setError(""); // On vide les erreur (s'il y en a)
             setIsAuthenticated(true); // On dit que l'on est authentifié (props passé par le composant Navbar dans app.js)
+            toast.success("Vous êtes désormais connecté ! 😃"); // Utilisation de la libraire "Toastify" pour l'affichage d'une notification à l'utilisateur
             history.replace("/"); // Méthode "replace" de history qui permet une Redirection d'url, ici vers la page d'accueil
         }catch(error){
             console.log("connexion échouée !!!")
             //console.log(error.response);
             setError("Aucun compte ne possède cette adresse ou les informations ne correspondent pas !");
+            toast.error("Une erreur est survenue ! 😈")
         }
     }
 

@@ -3,17 +3,18 @@
 */
 
 import axios from "axios";
+import { USERS_API } from "../config";
 
 function findAll(){
     return axios
-    .get("http://localhost:8000/api/users")
+    .get(USERS_API)
     .then(result => result.data["hydra:member"] );
 }
 
 // Permet d'enregister un nouvel utilisateur
 function register(user){
     return axios
-    .post("http://localhost:8000/api/users", user
+    .post(USERS_API, user
     );
 }
 

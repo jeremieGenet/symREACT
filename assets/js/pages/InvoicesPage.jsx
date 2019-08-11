@@ -64,6 +64,7 @@ const InvoicesPage = (props) => {
         // Création d'une tableau similaire au tableau des invoices originales (dans le but de le récup si la requête serveur ne fonctionne pas)
         const originalInvoices = [...invoices];
         //console.log("tableau" + [.. invoices]); // Affiche un tableau qui contient les invoices
+        toast.success("La facture à bien été supprimée !"); // Utilisation de la libraire "Toastify" pour l'affichage d'une notification à l'utilisateur
         // On filtre le tableau des invoices et on ne garde que les invoices dont l'id est différent de celui reçu en param (soit l'id du bouton cliqué)
         setInvoices(invoices.filter(invoice => invoice.id !== id));
         //console.log(id); // renvoi l'id du client

@@ -4,6 +4,7 @@
 
 import axios from "axios";
 import jwtDecode from "jwt-decode"; // Librairie qui permet de décoder un token jwt (de la librairie jwt)
+import { LOGIN_API } from "../config";
 
 /**
  * Déconnexion (suppression du token du localStorage et sur axios)
@@ -22,7 +23,7 @@ function logout(){
 function authenticate(credentials){
     // On envoi à axios le requête suivante avec les informations du formulaire (credentials)
     return axios
-        .post("http://localhost:8000/api/login_check", credentials)
+        .post(LOGIN_API, credentials)
         .then(response => response.data.token) // On récup la réponse à notre requête, on en extrait le token
         .then(token => {
             // On stock le token dans notre localStorage (espace mémoire de l'app)

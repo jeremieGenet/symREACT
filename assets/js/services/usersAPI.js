@@ -12,12 +12,10 @@ function findAll(){
 
 // Permet d'enregister un nouvel utilisateur
 function register(user){
-    return axios
-    .post(USERS_API, user
-    );
+    return axios.post(USERS_API, user);
 }
 
 export default {
-    findAll, findAll,
+    findAll: findAll,
     register: register
 }

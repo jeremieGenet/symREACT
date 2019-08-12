@@ -34,13 +34,13 @@ const UsersPage = (props) => {
         }
     };
     
-    const fetchCountInvoicesPerCustomer = async (id) => {
+    const  = async (id) => {
         try{
             const data = await axios
                 .get("http://localhost:8000/api/customers/" + id)
                 .then(result => result.data);
 
-            console.log(data.invoices.length);
+            console.log(data.invoices.length); // Retourne le nombre de factures pour un client donné
 
         }catch(error){
             console.log(error.response);

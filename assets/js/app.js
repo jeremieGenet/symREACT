@@ -15,7 +15,7 @@ import FormCustomerPage from './pages/form_pages/FormCustomerPage';
 import AuthContext from './contexts/AuthContext'; // Contexte d'authentification pour notre application
 import FormInvoicePage from './pages/form_pages/FormInvoicePage';
 import RegisterPage from './pages/form_pages/RegisterPage';
-import UsersPage from './pages/UsersPage';
+//import UsersPage from './pages/UsersPage';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // On import le css de Tostify (pour les notifications)
 
@@ -52,8 +52,7 @@ const App = () => {
                         <Route path="/login" component={LoginPage} />
                         {/* Chemin vers le formulaire d'enregistrement' */}
                         <Route path="/register" component={RegisterPage} />
-                        {/* Chemin vers le formulaire de création d'une facture (si l'utilisateur est authentifié, sinon redirection vers la page de connexion (composant fait main) */}
-                        <PrivateRoute path="/users" component={UsersPage} />
+                        
                         {/* Chemin vers la d'essai */}
                         <Route path="/essai" component={Essai} />
                         {/* Chemin vers le formulaire de création d'une facture (si l'utilisateur est authentifié, sinon redirection vers la page de connexion (composant fait main) */}

@@ -1,7 +1,6 @@
 /*
     GESTION DES REQUETES CONCERNANT LES USERS
 */
-
 import axios from "axios";
 import { USERS_API } from "../config";
 

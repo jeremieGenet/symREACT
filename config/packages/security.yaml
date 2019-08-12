@@ -16,8 +16,8 @@ security:
             security: false
         registration:
             pattern: ^/api/users
-            anonymous: true
             stateless: true
+            anonymous: true
             methods: [POST] # méthodes possibles avec ce firewall (la méthode GET est exclue, ainsi on ne peut récup la liste des utilisateur par exemple, par contre on peut poster)
         login:
             pattern:  ^/api/login
@@ -46,8 +46,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY } # cette url peut être utilisée sans être authentifié (sans être connecté)
-        - { path: ^/api/customers, roles: IS_AUTHENTICATED_FULLY }   # cette url doit être authentifié
-        - { path: ^/api/invoices, roles: IS_AUTHENTICATED_FULLY }    # cette url doit être authentifié
+        - { path: ^/api/customers, roles: IS_AUTHENTICATED_FULLY }   # cette url doit être authentifié (connecté)
+        - { path: ^/api/invoices, roles: IS_AUTHENTICATED_FULLY }    # cette url doit être authentifié (connecté)
         - { path: ^/api/users, roles: IS_AUTHENTICATED_FULLY, methods: [GET, PUT, DELETE] } # cette url doit être authentifié (sauf pour les méthodes GET, PUT, et DELETE)
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }

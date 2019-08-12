@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Pagination from "../components/Pagination";
 import axios from "axios";
-import UsersAPI from '../services/UsersAPI';
-
+import UsersAPI from "../services/UsersAPI";
 
 /*
     1. Page utilisateur avec firstName, lastName, email, Role, et nb de client  // Fait

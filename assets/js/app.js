@@ -14,8 +14,8 @@ import FormCustomerPage from './pages/form_pages/FormCustomerPage';
 
 import AuthContext from './contexts/AuthContext'; // Contexte d'authentification pour notre application
 import FormInvoicePage from './pages/form_pages/FormInvoicePage';
-import RegisterPage from './pages/form_pages/RegisterPage';
-import UsersPage from './pages/UsersPage';
+//import RegisterPage from './pages/form_pages/RegisterPage';
+//import UsersPage from './pages/UsersPage';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // On import le css de Tostify (pour les notifications)
 

@@ -34,7 +34,7 @@ const UsersPage = (props) => {
         }
     };
     
-    const  = async (id) => {
+    const fetchCountInvoicesPerCustomer = async (id) => {
         try{
             const data = await axios
                 .get("http://localhost:8000/api/customers/" + id)

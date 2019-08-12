@@ -1,3 +1,4 @@
+require("dotenv").config(); // Après intallation du package dotenv, permet de charger les variables d'environement du fichier .env
 var Encore = require('@symfony/webpack-encore');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
@@ -69,6 +70,11 @@ Encore
     // uncomment if you use API Platform Admin (composer req api-admin)
     .enableReactPreset()
     //.addEntry('admin', './assets/js/admin.js')
+
+    // Configuration de l'objet "Encore" pour lui dire à NodeJs qu'il y a une variable d'environnement dans le fichier .env qui s'appelle API_URL (notre http://localhost:8000/api/)
+    Encore.configureDefinePlugin(options => {
+        options["process.env"].API_URL = process.env.API_URL;
+    });
 ;
 
 module.exports = Encore.getWebpackConfig();

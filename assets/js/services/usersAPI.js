@@ -18,4 +18,4 @@ function register(user){
 export default {
     findAll,
     register
-}
+};

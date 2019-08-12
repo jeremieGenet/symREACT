@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Field from '../../components/forms/Field';
 import { Link } from "react-router-dom";
 import Field_Autofocus from '../../components/forms/Field_Autofocus';
-import UsersAPI from "../../services/UsersAPI";
+import UsersAPI from "../../services/usersAPI";
 import { toast } from 'react-toastify';
 
 

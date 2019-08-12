@@ -16,6 +16,6 @@ function register(user){
 }
 
 export default {
-    findAll: findAll,
-    register: register
+    findAll,
+    register
 }

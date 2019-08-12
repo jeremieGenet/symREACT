@@ -27,7 +27,7 @@ const CustomersPage = (props) => {
             setLoading(false); // Quand on a fini de récup les customers on met notre système de loading à "false"
         }catch(error){
             toast.error("Impossible de charger les clients !"); // Utilisation de la libraire "Toastify" pour l'affichage d'une notification à l'utilisateur
-            console.log(error.response)
+            // console.log(error.response) // Affiche un objet avec une propriété "Unauthorized"
         }
     }
 

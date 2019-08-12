@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Pagination from "../components/Pagination";
-import axios from "axios";
 import UsersAPI from "../services/UsersAPI";
+
 
 /*
     1. Page utilisateur avec firstName, lastName, email, Role, et nb de client  // Fait
@@ -33,22 +33,9 @@ const UsersPage = (props) => {
         }
     };
     
-    const fetchCountInvoicesPerCustomer = async (id) => {
-        try{
-            const data = await axios
-                .get("http://localhost:8000/api/customers/" + id)
-                .then(result => result.data);
-
-            console.log(data.invoices.length); // Retourne le nombre de factures pour un client donné
-
-        }catch(error){
-            console.log(error.response);
-        }
-    };
 
     useEffect(() =>{
         fetchUsers();
-        fetchCountInvoicesPerCustomer("311");
     }, []);
 
     // Gestion de la pagination (changement de pages)

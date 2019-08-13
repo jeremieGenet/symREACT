@@ -23,7 +23,8 @@ class InvoiceRepository extends ServiceEntityRepository
     // Requête DQL Doctrine pour récup le numéro le plus grand des factures (chrono) liés à un utilisateur (User) et lui ajouter 1
     public function findNextChrono(User $user)
     {
-        return $this->createQueryBuilder('i') // alias i pour l'entité Invoice.php
+        try{
+            return $this->createQueryBuilder('i') // alias i pour l'entité Invoice.php
             ->select('i.chrono') // on sélectionne le champ chrono et la table Invoice
             ->join('i.customer', "c") // on récup le customer lié à la facture, et on nomme son alias "c"
             ->where("c.user = :user") // là ou le client lié à la facture vaut :user (alias défini ci-après dans setParameter)
@@ -32,7 +33,11 @@ class InvoiceRepository extends ServiceEntityRepository
             ->setMaxResults(1) // et de cette requête on ne veut qu'un résultat
             ->getQuery() // On récup la requête
             ->getSingleScalarResult() + 1; // on récup sous forme de numéro le résutat de la requête et on lui ajoute 1
-        ;
+        // Si il y a une exception on retourne 1 (Pour le cas de la création de la première facture de l'application, car aucun "chrono" n'existe encore)
+        }catch(\Exception $e){
+            return 1;
+        }
+        
     }
 
     // /**
